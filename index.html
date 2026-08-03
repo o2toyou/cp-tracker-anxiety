@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ほっとひと息 落ち着きコンパニオン｜不安クラス</title>
+<style>
+  :root {
+    --bg: #10141a;
+    --bg-2: #171c24;
+    --card: #1c222c;
+    --ink: #eceae3;
+    --ink-soft: #b9c0c9;
+    --muted: #7f8a96;
+    --teal: #6cc3bf;
+    --teal-deep: #2f8f8b;
+    --gold: #e0ad5a;
+    --rule: #2a313c;
+    --safe: #e79178;
+    --safe-bg: #2c2020;
+    --ring-bg: #232b36;
+    --shadow: 0 10px 40px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f3f1ea; --bg-2: #eae7dd; --card: #ffffff;
+      --ink: #232830; --ink-soft: #454d57; --muted: #6d7681;
+      --teal: #2f8f8b; --teal-deep: #1f6a67; --gold: #9a6f1e;
+      --rule: #ded9cd; --safe: #b0432f; --safe-bg: #fbece8;
+      --ring-bg: #e7e3d8; --shadow: 0 10px 40px rgba(60,50,30,.12);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10141a; --bg-2: #171c24; --card: #1c222c;
+    --ink: #eceae3; --ink-soft: #b9c0c9; --muted: #7f8a96;
+    --teal: #6cc3bf; --teal-deep: #2f8f8b; --gold: #e0ad5a;
+    --rule: #2a313c; --safe: #e79178; --safe-bg: #2c2020;
+    --ring-bg: #232b36; --shadow: 0 10px 40px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f1ea; --bg-2: #eae7dd; --card: #ffffff;
+    --ink: #232830; --ink-soft: #454d57; --muted: #6d7681;
+    --teal: #2f8f8b; --teal-deep: #1f6a67; --gold: #9a6f1e;
+    --rule: #ded9cd; --safe: #b0432f; --safe-bg: #fbece8;
+    --ring-bg: #e7e3d8; --shadow: 0 10px 40px rgba(60,50,30,.12);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+    line-height: 1.8; -webkit-font-smoothing: antialiased;
+    max-width: 560px; margin: 0 auto; min-height: 100vh;
+    padding-bottom: 84px;
+  }
+  .mincho { font-family: "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", serif; }
+
+  /* header */
+  header { padding: 20px 20px 8px; display: flex; align-items: center; justify-content: space-between; }
+  header .brand { font-size: 11px; letter-spacing: .16em; color: var(--teal); font-weight: 700; }
+  header .brand .ttl { display: block; font-size: 17px; color: var(--ink); letter-spacing: .02em; margin-top: 2px; font-weight: 700; }
+  header .theme { border: 1px solid var(--rule); background: var(--card); color: var(--ink-soft);
+    width: 38px; height: 38px; border-radius: 999px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+
+  main { padding: 8px 20px 20px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ===== 呼吸ペーサー ===== */
+  .pacer-wrap { text-align: center; padding: 8px 0 4px; }
+  .exsel { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 22px; }
+  .exsel button {
+    border: 1px solid var(--rule); background: var(--card); color: var(--ink-soft);
+    padding: 8px 13px; border-radius: 999px; font-size: 13px; cursor: pointer; font-weight: 600;
+  }
+  .exsel button.on { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+  .stage { position: relative; width: 260px; height: 260px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+  .ring-outer { position: absolute; inset: 0; border-radius: 50%; background: var(--ring-bg); }
+  .orb {
+    position: absolute; width: 96px; height: 96px; border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, var(--teal), var(--teal-deep));
+    box-shadow: 0 0 44px color-mix(in srgb, var(--teal) 55%, transparent);
+    transition: transform 0.25s linear;
+  }
+  .orb-label { position: relative; z-index: 2; text-align: center; color: #fff; pointer-events: none; }
+  .orb-label .phase { font-size: 20px; font-weight: 700; }
+  .orb-label .count { font-size: 13px; opacity: .9; font-variant-numeric: tabular-nums; }
+  :root[data-theme="light"] .orb-label, .orb-label { color: #fff; }
+
+  /* ===== 波モード（ブリーズライト） ===== */
+  .wave-stage { display: none; width: 100%; max-width: 340px; margin: 0 auto; }
+  .wave-stage.on { display: block; }
+  .wave-stage canvas { width: 100%; height: 150px; display: block; }
+  .wave-phase { text-align: center; font-size: 18px; font-weight: 700; color: var(--teal); min-height: 26px; margin-top: 2px; }
+
+  /* ===== カップハンド表示 ===== */
+  .cup-stage { display: none; text-align: center; padding: 6px 0 0; }
+  .cup-stage.on { display: block; }
+  .cup-scene { position: relative; width: 250px; height: 165px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+  .cup-hands { position: relative; z-index: 2; width: 250px; height: 163px; color: var(--teal); }
+  .cup-glow {
+    position: absolute; z-index: 1; left: 50%; top: 58%; transform: translate(-50%, -50%) scale(0.5);
+    width: 130px; height: 130px; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--gold) 85%, transparent) 0%, color-mix(in srgb, var(--gold) 30%, transparent) 55%, transparent 72%);
+    opacity: .35; transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  }
+  .cup-phase { font-size: 20px; font-weight: 700; color: var(--teal); min-height: 28px; margin-top: 6px; }
+  .cup-count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 20px; }
+
+  /* ===== CP測定 ===== */
+  .cp-timer-wrap { text-align: center; background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: 26px 20px 22px; margin: 18px 0; }
+  .cp-num { font-size: 58px; font-weight: 800; color: var(--teal); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cp-num .u { font-size: 20px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+  .cp-inst { color: var(--ink-soft); font-size: 14px; margin-top: 10px; min-height: 44px; line-height: 1.75; max-width: 34ch; margin-left: auto; margin-right: auto; }
+  /* --- 測定中の落ち着く表示（数字は隠す） --- */
+  .cp-calm { display: none; }
+  .cp-calm.on { display: block; }
+  .cp-scene { position: relative; width: 220px; height: 180px; margin: 0 auto; overflow: hidden; }
+  .cp-halo {
+    position: absolute; left: 50%; top: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--teal) 55%, transparent) 0%, transparent 70%);
+    animation: haloBreath 9s ease-in-out infinite;
+  }
+  @keyframes haloBreath {
+    0%, 100% { transform: scale(0.85); opacity: .45; }
+    50%      { transform: scale(1.25); opacity: .8; }
+  }
+  .mote {
+    position: absolute; top: -14px; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--teal); opacity: 0;
+    animation: moteFall linear infinite;
+  }
+  @keyframes moteFall {
+    0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+    15%  { opacity: .75; }
+    70%  { opacity: .5; }
+    100% { transform: translate(var(--dx, 10px), 186px) scale(.6); opacity: 0; }
+  }
+  .mote.m1 { left: 14%;  animation-duration: 13s; animation-delay: 0s;   --dx: 16px;  }
+  .mote.m2 { left: 30%;  animation-duration: 16s; animation-delay: 2.4s; --dx: -12px; width: 7px; height: 7px; }
+  .mote.m3 { left: 46%;  animation-duration: 11s; animation-delay: 4.8s; --dx: 8px;   }
+  .mote.m4 { left: 62%;  animation-duration: 15s; animation-delay: 1.2s; --dx: -18px; width: 6px; height: 6px; }
+  .mote.m5 { left: 78%;  animation-duration: 12s; animation-delay: 6.2s; --dx: 12px;  }
+  .mote.m6 { left: 22%;  animation-duration: 17s; animation-delay: 8.1s; --dx: -8px;  width: 6px; height: 6px; }
+  .mote.m7 { left: 54%;  animation-duration: 14s; animation-delay: 3.6s; --dx: -14px; width: 8px; height: 8px; }
+  .mote.m8 { left: 86%;  animation-duration: 18s; animation-delay: 9.5s; --dx: 6px;   width: 5px; height: 5px; }
+  .cp-calm-text { color: var(--muted); font-size: 13.5px; margin-top: 4px; letter-spacing: .04em; }
+  @media (prefers-reduced-motion: reduce) {
+    .cp-halo, .mote { animation-duration: 24s !important; }
+  }
+
+  .cp-result { margin-top: 16px; padding: 14px 16px; border-radius: 12px; background: var(--step-bg); font-size: 14px; color: var(--ink-soft); text-align: left; line-height: 1.7; }
+  .cp-result b { color: var(--gold); }
+  .cp-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--rule); font-size: 14px; }
+  .cp-row:last-child { border-bottom: none; }
+  .cp-row .date { color: var(--muted); font-size: 13px; min-width: 92px; }
+  .cp-row .sec { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cp-row .band { font-size: 11px; border: 1px solid var(--rule); border-radius: 6px; padding: 2px 8px; color: var(--teal); margin-left: auto; }
+  .cp-row .del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 0 2px; }
+  .cp-empty { color: var(--muted); font-size: 13px; padding: 14px 0; text-align: center; }
+  .sliders { max-width: 340px; margin: 16px auto 0; display: flex; flex-direction: column; gap: 14px; }
+  .sliders .row { text-align: left; }
+  .sliders label { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; font-weight: 600; }
+  .sliders label .val { color: var(--gold); font-variant-numeric: tabular-nums; }
+  .sliders input[type=range] {
+    width: 100%; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px;
+    background: var(--ring-bg); outline: none;
+  }
+  .sliders input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--teal); cursor: pointer; border: 3px solid var(--bg);
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  }
+  .sliders input[type=range]::-moz-range-thumb {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--teal); cursor: pointer; border: 3px solid var(--bg);
+  }
+  .sliders .hint { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+  .preset-btns { display: flex; gap: 10px; margin: 4px 0 6px; }
+  .preset-btns button {
+    flex: 1; border: 1px solid var(--rule); background: var(--card); color: var(--ink-soft);
+    padding: 12px 8px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
+    font-variant-numeric: tabular-nums; letter-spacing: .04em;
+  }
+  .preset-btns button .sub { display: block; font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 2px; letter-spacing: 0; }
+  .preset-btns button.on { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .preset-btns button.on .sub { color: rgba(255,255,255,.85); }
+
+  .pacer-caption { color: var(--ink-soft); font-size: 14px; min-height: 44px; margin: 18px auto 4px; max-width: 40ch; }
+  .pacer-caption b { color: var(--gold); }
+  .pacer-sub { color: var(--muted); font-size: 12.5px; margin-bottom: 16px; }
+  .pacer-controls { display: flex; gap: 10px; justify-content: center; }
+  .btn {
+    border: none; border-radius: 12px; padding: 13px 22px; font-size: 15px; font-weight: 700;
+    cursor: pointer; letter-spacing: .02em;
+  }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-ghost { background: var(--card); color: var(--ink-soft); border: 1px solid var(--rule); }
+  .cyc { color: var(--muted); font-size: 12px; margin-top: 12px; font-variant-numeric: tabular-nums; }
+
+  .note { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; margin: 20px 0 0; font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; }
+  .note .lab { color: var(--teal); font-weight: 700; font-size: 12px; letter-spacing: .08em; display: block; margin-bottom: 4px; }
+
+  /* ===== パニックSOS ===== */
+  .sos-hero { text-align: center; padding: 12px 0 0; }
+  .sos-big {
+    display: block; width: 100%; border: none; border-radius: 20px; cursor: pointer;
+    background: linear-gradient(150deg, var(--teal), var(--teal-deep));
+    color: #fff; padding: 30px 20px; font-size: 22px; font-weight: 800; letter-spacing: .04em;
+    box-shadow: var(--shadow);
+  }
+  .sos-big small { display: block; font-size: 13px; font-weight: 500; opacity: .92; margin-top: 6px; letter-spacing: .02em; }
+  .sos-steps { margin-top: 20px; }
+  .sos-steps li { list-style: none; }
+
+  /* SOS overlay */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: var(--bg);
+    display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px; max-width: 560px; margin: 0 auto; }
+  .overlay.on { display: flex; }
+  .overlay .ov-phase { font-size: 26px; font-weight: 800; color: var(--ink); margin-bottom: 4px; text-align: center; }
+  .overlay .ov-inst { color: var(--ink-soft); font-size: 15px; text-align: center; max-width: 34ch; min-height: 48px; }
+  .overlay .ov-count { color: var(--teal); font-size: 15px; font-variant-numeric: tabular-nums; margin-top: 8px; }
+  .overlay .ov-close { position: absolute; top: 18px; right: 18px; background: var(--card); border: 1px solid var(--rule);
+    color: var(--ink-soft); border-radius: 999px; width: 42px; height: 42px; font-size: 20px; cursor: pointer; }
+  .overlay .ov-stage { margin: 26px 0; }
+
+  /* ===== 実践チェック ===== */
+  .day-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+  .day-head h2 { font-size: 17px; margin: 0; }
+  .day-head .streak { color: var(--gold); font-size: 13px; font-weight: 700; }
+  .practice { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .practice li {
+    display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--rule);
+    border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: border-color .15s;
+  }
+  .practice li.done { border-color: var(--teal); background: color-mix(in srgb, var(--teal) 10%, var(--card)); }
+  .practice .box { flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--muted);
+    display: flex; align-items: center; justify-content: center; font-size: 16px; color: transparent; }
+  .practice li.done .box { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .practice .txt { flex: 1; }
+  .practice .txt .t { font-weight: 700; color: var(--ink); font-size: 15px; }
+  .practice .txt .d { color: var(--muted); font-size: 12.5px; }
+  .practice .when { font-size: 11px; color: var(--teal); border: 1px solid var(--rule); border-radius: 6px; padding: 2px 7px; flex-shrink: 0; }
+
+  .weekdots { display: flex; gap: 7px; justify-content: center; margin: 18px 0 6px; }
+  .weekdots .d { width: 30px; text-align: center; font-size: 11px; color: var(--muted); }
+  .weekdots .dot { width: 30px; height: 30px; border-radius: 50%; background: var(--ring-bg); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .weekdots .dot.has { background: var(--teal); color: #fff; font-weight: 700; }
+  .weekdots .dot.today { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .reassure { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 14px; line-height: 1.7; }
+
+  /* 学びタブ */
+  .learn h3 { font-size: 15px; color: var(--gold); margin: 22px 0 6px; }
+  .learn p { color: var(--ink-soft); font-size: 14px; margin: 0 0 10px; }
+  .learn .kv { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; margin: 10px 0; }
+  .learn .kv b { color: var(--teal); }
+
+  /* tabbar */
+  .tabbar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 560px;
+    background: var(--bg-2); border-top: 1px solid var(--rule); display: flex; z-index: 40;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .tabbar button { flex: 1; border: none; background: transparent; color: var(--muted); padding: 10px 0 12px;
+    font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .tabbar button .ic { font-size: 20px; }
+  .tabbar button.on { color: var(--teal); }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">ANXIETY CLINIC
+    <span class="ttl mincho">落ち着きコンパニオン</span>
+  </div>
+  <button class="theme" id="themeBtn" aria-label="テーマ切替">◐</button>
+</header>
+
+<main>
+  <!-- ========== 呼吸ガイド ========== -->
+  <section class="tab-panel active" id="tab-breathe">
+    <div class="pacer-wrap">
+      <div class="exsel" id="exsel"></div>
+
+      <div class="stage" id="orbStage">
+        <div class="ring-outer"></div>
+        <div class="orb" id="orb"></div>
+        <div class="orb-label">
+          <div class="phase" id="orbPhase">準備</div>
+          <div class="count" id="orbCount"></div>
+        </div>
+      </div>
+
+      <div class="wave-stage" id="waveStage">
+        <canvas id="waveCanvas" width="680" height="300"></canvas>
+        <div class="wave-phase" id="wavePhase"></div>
+      </div>
+
+      <!-- カップハンド表示 -->
+      <div class="cup-stage" id="cupStage">
+        <div class="cup-scene">
+          <div class="cup-glow" id="cupGlow"></div>
+          <svg class="cup-hands" viewBox="0 0 200 130" aria-hidden="true">
+            <path d="M18 62 C18 40, 34 24, 58 22 C74 21, 88 27, 100 38 C112 27, 126 21, 142 22 C166 24, 182 40, 182 62 C182 96, 148 120, 100 120 C52 120, 18 96, 18 62 Z"
+                  fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M58 22 C56 44, 62 62, 74 74" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+            <path d="M142 22 C144 44, 138 62, 126 74" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+          </svg>
+        </div>
+        <div class="cup-phase" id="cupPhase"></div>
+        <div class="cup-count" id="cupCount"></div>
+      </div>
+
+      <div class="pacer-caption" id="pacerCaption"></div>
+      <div class="pacer-sub" id="pacerSub"></div>
+
+      <div class="pacer-controls">
+        <button class="btn btn-primary" id="startBtn">はじめる</button>
+        <button class="btn btn-ghost hidden" id="stopBtn">終了する</button>
+      </div>
+      <div class="cyc" id="cyc"></div>
+
+      <!-- ゆっくり吐く：プリセット -->
+      <div class="sliders hidden" id="exhalePresets">
+        <div class="row">
+          <label>吸う : 吐く のパターン<span class="val" id="expVal"></span></label>
+          <div class="preset-btns" id="expBtns"></div>
+          <div class="hint">吐く息を長くするのが目的。<b style="color:var(--gold)">秒数はあくまで目安</b>、苦しければ短い方を</div>
+        </div>
+      </div>
+
+      <!-- ステップ：歩数プリセット -->
+      <div class="sliders hidden" id="stepPresets">
+        <div class="row">
+          <label>歩数のすすめ方<span class="val" id="stepPresetVal"></span></label>
+          <div class="preset-btns" id="stepBtns"></div>
+          <div class="hint" id="stepHint"></div>
+        </div>
+      </div>
+
+      <!-- カップハンド：プリセット -->
+      <div class="sliders hidden" id="cupPresets">
+        <div class="row">
+          <label>吸う : 吐く のパターン<span class="val" id="cupPresetVal"></span></label>
+          <div class="preset-btns" id="cupBtns"></div>
+          <div class="hint">今の呼吸より<b style="color:var(--gold)">意識してゆっくり</b>に。苦しければ短い方から、落ち着いてきたら長い方へ</div>
+        </div>
+      </div>
+
+      <!-- 短い息どめ：止める秒数のみ調整 -->
+      <div class="sliders hidden" id="holdSliders">
+        <div class="row">
+          <label>止める秒数<span class="val" id="hHoldVal"></span></label>
+          <input type="range" id="hHoldRange" min="2" max="10" value="3">
+          <div class="hint">吸う・吐くは<b style="color:var(--gold)">数えず、自然のまま</b>。息止めは<b style="color:var(--gold)">3〜5秒から</b>、苦しければ短く。そのあと<b style="color:var(--gold)">15秒</b>ふつうに呼吸して休みます</div>
+        </div>
+      </div>
+
+      <div class="sliders hidden" id="waveSliders">
+        <div class="row">
+          <label>スピード（ゆっくり ↔ 速く）<span class="val" id="spdVal"></span></label>
+          <input type="range" id="spdRange" min="0" max="100" value="35">
+          <div class="hint">速くすると波の幅が狭まり、呼吸の回数が増えます。<b style="color:var(--gold)">ゆっくりなほど脳に「安全」が届く</b></div>
+        </div>
+        <div class="row">
+          <label>波の高さ（低い ↔ 高い）<span class="val" id="ampVal"></span></label>
+          <input type="range" id="ampRange" min="0" max="100" value="30">
+          <div class="hint">ブリーズライトは「軽い呼吸」。<b style="color:var(--gold)">波は低いほど呼吸量が減る</b>（少なく吸う）</div>
+        </div>
+        <div class="row">
+          <label>吸う : 吐く の比率<span class="val" id="ratioVal"></span></label>
+          <input type="range" id="ratioRange" min="10" max="30" value="15">
+          <div class="hint">吐く息を長くするほど、脳に「安全」が伝わりやすい。<b style="color:var(--gold)">標準は 1 : 1.5</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="lab">コツ</span>
+      <span id="tipText"></span>
+    </div>
+  </section>
+
+  <!-- ========== 安心ボタン（パニックSOS） ========== -->
+  <section class="tab-panel" id="tab-sos">
+    <div class="sos-hero">
+      <button class="sos-big" id="sosStart">
+        いま、落ち着く
+        <small>タップすると、手のカップ呼吸に導きます</small>
+      </button>
+    </div>
+    <div class="note" style="margin-top:22px;">
+      <span class="lab">パニックの兆候を感じたら</span>
+      速く浅い胸の呼吸はパニックを強めます。逆に、<b>ゆっくり・低く・鼻で</b>呼吸すると鎮まります。安全な場所で座って行ってください。
+    </div>
+    <ol class="sos-steps practice" style="margin-top:14px;">
+      <li><span class="box">1</span><span class="txt"><span class="t">両手をカップ状にして鼻と口を覆う</span><span class="d">吐いた息（CO₂）を戻して、過呼吸をやわらげます</span></span></li>
+      <li><span class="box">2</span><span class="txt"><span class="t">鼻でゆっくり呼吸（吸2・3／吐2・3くらい）</span><span class="d">最初は窒息感を消す程度に、そこから徐々にゆっくり小さく</span></span></li>
+      <li><span class="box">3</span><span class="txt"><span class="t">横隔膜で低く呼吸する</span><span class="d">お腹・下の肋骨がふくらむのを感じて</span></span></li>
+      <li><span class="box">4</span><span class="txt"><span class="t">落ち着くまで続ける</span><span class="d">数分でCO₂が戻り、脳が「安全」を受け取ります</span></span></li>
+    </ol>
+    <div class="reassure">※ 症状が重い・長引く場合や、通院中の方は担当医にご相談ください。処方薬は自己判断で中断しないでください。</div>
+  </section>
+
+  <!-- ========== 今日の実践 ========== -->
+  <section class="tab-panel" id="tab-today">
+    <div class="day-head">
+      <h2 class="mincho">今日の小さな実践</h2>
+      <span class="streak" id="streak"></span>
+    </div>
+    <p style="color:var(--muted);font-size:12.5px;margin:2px 0 0;">数値は測りません。「やった」にチェックするだけ。できた日を積み重ねましょう。</p>
+
+    <ul class="practice" id="practiceList"></ul>
+
+    <div class="weekdots" id="weekdots"></div>
+    <div class="reassure">
+      できない日があっても大丈夫。呼吸は「うまくやる」ものではなく「思い出す」もの。<br>
+      1つでもチェックできたら、それでいい一日です。
+    </div>
+
+    <!-- 誘導音声 -->
+    <div class="note" style="margin-top:22px;">
+      <span class="lab">GUIDED AUDIO　誘導音声</span>
+      考えが止まらないとき・落ち着きたいとき・眠る前にご利用ください。タップで音声プレーヤーが開きます。
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:0.1em;margin:16px 0 8px;">🧠 思考が止まらないとき</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+
+      <div id="audio-perfectionism" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-perfectionism')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
+          <span style="font-size:20px;">🧘</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">完璧主義を手放したいあなたへ</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">反芻思考・考えすぎをやわらげる誘導音声（BGMあり）</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/ZW4GWhsBY2Qr" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div id="audio-perfectionism-nobgm" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-perfectionism-nobgm')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
+          <span style="font-size:20px;">🧘</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">完璧主義を手放したいあなたへ（BGMなし）</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">声のみで聴きたい方に</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/IJp3wQejGiu9" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:0.1em;margin-bottom:8px;">🌬️ 今、落ち着きたいとき</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+
+      <div id="audio-awareness" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-awareness')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+          <span style="font-size:20px;">🌬️</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">気づきの呼吸エクササイズ</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">思考を静め、体に意識を戻す</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/PZad1YuphDJB" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:0.1em;margin-bottom:8px;">☀️ 日中の実践</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+
+      <div id="audio-breathe-light" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-breathe-light')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+          <span style="font-size:20px;">😌</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">リラクゼーションとブリーズライト</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">日中のブリーズライト・気分転換に</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/w2nsA9c9dNmD" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--teal);letter-spacing:0.1em;margin-bottom:8px;">🌙 夜寝る前</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <div id="audio-sleep-main" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-sleep-main')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+          <span style="font-size:20px;">😴</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">スリープ・イージー</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">寝つきを助ける誘導音声</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/wehQEEhETbYX" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div id="audio-sleep-piano" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-sleep-piano')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+          <span style="font-size:20px;">🎹</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">スリープイージー（ピアノ）</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">就寝前の誘導音声・ピアノBGM</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/qrJIyJvrj6Oo" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div id="audio-sleep-green" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
+        <div onclick="toggleAudio('audio-sleep-green')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+          <span style="font-size:20px;">🌿</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--ink);">スリープイージー（グリーン）</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">就寝前の誘導音声・自然音BGM</div>
+          </div>
+          <span class="audio-arrow" style="color:var(--teal);font-size:18px;transition:transform 0.2s;">▶</span>
+        </div>
+        <div class="audio-player-wrap" style="display:none;">
+          <iframe src="https://utage-system.com/audio/qkrhNCkZQeVz" style="width:100%;height:80px;border:none;" allow="autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== CP測定 ========== -->
+  <section class="tab-panel" id="tab-cp">
+    <div class="day-head">
+      <h2 class="mincho">CP測定</h2>
+      <span class="streak" id="cpLatest"></span>
+    </div>
+    <p style="color:var(--muted);font-size:12.5px;margin:2px 0 0;">
+      測りたいときだけでOK。<b style="color:var(--gold)">毎日測る必要はありません</b>。数値に一喜一憂しないでください。
+    </p>
+
+    <div class="cp-timer-wrap">
+      <div class="cp-num" id="cpNum">—</div>
+      <div class="cp-calm" id="cpCalm">
+        <div class="cp-scene">
+          <span class="mote m1"></span><span class="mote m2"></span><span class="mote m3"></span>
+          <span class="mote m4"></span><span class="mote m5"></span><span class="mote m6"></span>
+          <span class="mote m7"></span><span class="mote m8"></span>
+          <div class="cp-halo"></div>
+        </div>
+        <div class="cp-calm-text">体も心もリラックスさせて</div>
+      </div>
+      <div class="cp-inst" id="cpInst">自然に吸って、自然に吐いてから「スタート」</div>
+      <div class="pacer-controls" style="margin-top:14px;">
+        <button class="btn btn-primary" id="cpStart">スタート</button>
+        <button class="btn btn-ghost hidden" id="cpStop">息をしたくなった</button>
+      </div>
+      <div class="cp-result hidden" id="cpResult"></div>
+    </div>
+
+    <div class="note">
+      <span class="lab">測り方</span>
+      ① 自然に吸って、自然に吐く　② 鼻をつまんで「スタート」　③ <b>最初の確かな息苦しさ</b>が来たら止める。<br>
+      放したあと<b>呼吸が乱れなければ</b>正しく測れています。苦しくなるまで我慢しないでください。
+    </div>
+
+    <div id="cpHistoryWrap">
+      <h3 style="font-size:15px;color:var(--gold);margin:24px 0 8px;">記録</h3>
+      <div id="cpList"></div>
+    </div>
+
+    <div class="note" style="border-color:var(--teal-dim);">
+      <span class="lab">CPと呼吸法のおすすめ設定</span>
+      測ったCPに合わせて、各呼吸法の初期設定が自動で切り替わります。<br>
+      <b>CP 15秒未満</b>：ゆっくり吐く 3:5 ／ ブリーズライト 6秒・高さふつう・1:1.5 ／ 短い息どめ 3秒<br>
+      <b>CP 15秒以上</b>：ゆっくり吐く 4:6 ／ ブリーズライト 8秒・高さ低め・1:2 ／ 短い息どめ 5秒
+    </div>
+    <div class="reassure">CPは「今の目安」であって、あなたの価値とは無関係です。不安が強い日は測らなくて大丈夫。</div>
+  </section>
+
+  <!-- ========== 学び ========== -->
+  <section class="tab-panel learn" id="tab-learn">
+    <h2 class="mincho" style="font-size:18px;margin:6px 0 2px;">なぜ呼吸で不安が変わるの？</h2>
+
+    <h3>脳は呼吸を「見張って」いる</h3>
+    <p>脳は常にあなたの呼吸を監視しています（2017年発見）。速く強い呼吸は「危険だ」の合図。ゆっくり吐く呼吸は「安全だ」の合図。だから<b>吐く息をゆっくり</b>にするだけで、脳に安心を伝えられます。</p>
+
+    <h3>「深呼吸して」は逆効果のことも</h3>
+    <div class="kv">大きく吸い込むと二酸化炭素を吹き飛ばしすぎて、<b>脳への血流はむしろ減り</b>、脳は興奮しやすくなります。必要なのは「もっと吸う」ではなく「軽く・ゆっくり」。</div>
+
+    <h3>二酸化炭素は「悪者」じゃない</h3>
+    <p>軽い呼吸で二酸化炭素がわずかに増えると血管が開き、<b>脳への血流が5〜10%増えて</b>落ち着きます。運動時のような軽い「空気が足りない感じ（空気飢餓感）」は、うまくできているサインです。</p>
+
+    <h3>考えすぎ（反芻）と呼吸</h3>
+    <p>私たちは起きている時間の<b>約50%</b>を「今」以外のことを考えて過ごしています。口呼吸や浅い呼吸は、頭の中の「壊れたレコード」に燃料を与えます。鼻で・ゆっくり・低く呼吸して、注意を頭から体へ戻しましょう。</p>
+
+    <div class="note" style="margin-top:20px;">
+      <span class="lab">CPについて</span>
+      呼吸保持（コントロールポーズ/CP）は「参考の目安」です。<b>このアプリでは毎日測りません。</b>数値に一喜一憂すると、かえって不安を強めてしまうから。大切なのは記録より、その瞬間に落ち着くことです。
+    </div>
+  </section>
+</main>
+
+<!-- SOS overlay -->
+<div class="overlay" id="sosOverlay">
+  <button class="ov-close" id="sosClose" aria-label="閉じる">✕</button>
+  <div class="ov-stage stage">
+    <div class="ring-outer"></div>
+    <div class="orb" id="sosOrb"></div>
+  </div>
+  <div class="ov-phase" id="sosPhase">はじめましょう</div>
+  <div class="ov-inst" id="sosInst">両手をカップ状にして、鼻と口をやさしく覆ってください</div>
+  <div class="ov-count" id="sosCount"></div>
+  <button class="btn btn-ghost" id="sosNext" style="margin-top:24px;">次へ</button>
+</div>
+
+<!-- tabbar -->
+<nav class="tabbar">
+  <button class="on" data-tab="tab-breathe"><span class="ic">🫧</span>呼吸ガイド</button>
+  <button data-tab="tab-sos"><span class="ic">🕊️</span>安心ボタン</button>
+  <button data-tab="tab-today"><span class="ic">✓</span>今日の実践</button>
+  <button data-tab="tab-cp"><span class="ic">⏱</span>CP測定</button>
+  <button data-tab="tab-learn"><span class="ic">📖</span>学び</button>
+</nav>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* ---------- theme ---------- */
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme');
+    if (!cur) cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('ac_theme', next); } catch (e) {}
+  });
+  try { var st = localStorage.getItem('ac_theme'); if (st) root.setAttribute('data-theme', st); } catch (e) {}
+
+  /* ---------- tabs ---------- */
+  var tabBtns = document.querySelectorAll('.tabbar button');
+  tabBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      stopPacer();
+      tabBtns.forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+      document.getElementById(b.dataset.tab).classList.add('active');
+      if (b.dataset.tab === 'tab-today') renderToday();
+      if (b.dataset.tab === 'tab-cp') renderCP();
+    });
+  });
+
+  /* ======================================================
+     呼吸ガイド（ペーサー）
+     phases: {label, secs, scale}  scale=orbの目標倍率
+     ====================================================== */
+  var EXERCISES = {
+    exhale: {
+      name: 'ゆっくり吐く',
+      preset: true,
+      caption: '面接・歯医者・人前で。<b>誰にも見えない</b>落ち着き方。',
+      tip: '呼気（吐く息）の速度をゆっくりにするのが、脳に「安全だよ」と伝える一番の合図です。<b>秒数はあくまで目安</b>。苦しくない範囲で、あなたのペースで大丈夫。呼吸は人それぞれ「指紋」のように違います。',
+      sub: '鼻から軽く吸って、ゆっくり長く吐く',
+      phases: [
+        { label: '吸う', secs: 4, scale: 1.9 },
+        { label: '吐く', secs: 6, scale: 1.0 }
+      ]
+    },
+    light: {
+      name: 'ブリーズライト',
+      wave: true,
+      caption: 'もっとも大切な練習。波にあわせて<b>軽く・ゆっくり</b>。',
+      tip: '正しくできているサインは<b>「軽い息苦しさ」があるか</b>だけ。それがなければ、まだ呼吸が多いということ。眠気・唾液が増える・手が温かくなるのは、うまくいっているサインです。強すぎたら15〜60秒休んでから戻ってください。',
+      sub: '波を低く・ゆっくりに。心地よい軽さで5分を1日3〜4回',
+      phases: [
+        { label: '軽く吸う', secs: 4, scale: 1.5 },
+        { label: 'ゆっくり吐く', secs: 6, scale: 1.0 }
+      ]
+    },
+    hold: {
+      name: '短い息どめ',
+      adjustable: true,
+      caption: '頭が重いとき・ざわつくとき。<b>脳に安全のサイン</b>。',
+      tip: '吸う・吐くは<b>数えず、自然のまま</b>。止めるのは3〜5秒から始めて、苦しければ短くしてください。止めたあと<b>呼吸が乱れないこと</b>が目安です。強いストレスがあるときは、1時間おきに5分ほど繰り返すのも役立ちます。',
+      sub: '自然に吸って吐いて→止める→15秒ふつうに呼吸、を繰り返す',
+      phases: [
+        { label: '自然に吸う', secs: 1.5, scale: 1.7, silent: true },
+        { label: '自然に吐く', secs: 1.5, scale: 1.0, silent: true },
+        { label: '止める', secs: 3, scale: 1.0 },
+        { label: 'ふつうに呼吸', secs: 15, scale: 1.3 }
+      ]
+    },
+    step: {
+      name: 'ステップ',
+      stepMode: true,
+      stepPreset: true,
+      caption: '歩きながら息を止めます。<b>考えすぎを中断させる</b>のに役立ちます。',
+      tip: '<b>10歩が最大</b>です。5歩から始めて、快適なら7歩、さらに快適なら10歩へ。歩き終えたら数歩あるいて止まり、呼吸が落ち着くまで休んでください。<b>呼吸再開時に呼吸が乱れるなら、ステップの歩数を減らしてください。</b>',
+      sub: '座って実施するより息苦しさに耐えやすい。鼻が詰まったときにも',
+      phases: [
+        { label: '自然に吸う', secs: 1.5, scale: 1.6, silent: true },
+        { label: '自然に吐く', secs: 1.5, scale: 1.0, silent: true },
+        { label: '止めて歩く', secs: 5, scale: 1.0, counting: 'steps' },
+        { label: '数歩、歩いてから止まって休みます', secs: 30, scale: 1.3 }
+      ]
+    },
+    calm478: {
+      name: 'カップハンド',
+      cup: true,
+      cupPreset: true,
+      caption: '強い不安・パニックの兆しに。<b>手の中の温かさ</b>を感じて。',
+      tip: '手のひらは<b>呼吸の量を映す鏡</b>です。手に感じる温かい空気が多いほど、強く呼吸している証拠。最初は手の中でゆっくり呼吸するだけでOKです。息苦しさが強すぎると感じたら、カップを顔から離して休憩してから、無理のないペースで再開します。安全な場所で、座って行ってください。',
+      sub: '両手をカップ状にして鼻と口を覆い、手の中にゆっくり呼吸する',
+      phases: [
+        { label: '吸う', secs: 3, scale: 0.55 },
+        { label: '吐く', secs: 4, scale: 1.25 }
+      ]
+    }
+  };
+
+  var curKey = 'exhale';
+  var timer = null, phaseIdx = 0, phaseRemain = 0, cycleCount = 0, running = false;
+
+  var orb = document.getElementById('orb');
+  var orbPhase = document.getElementById('orbPhase');
+  var orbCount = document.getElementById('orbCount');
+  var capEl = document.getElementById('pacerCaption');
+  var subEl = document.getElementById('pacerSub');
+  var cycEl = document.getElementById('cyc');
+  var startBtn = document.getElementById('startBtn');
+  var stopBtn = document.getElementById('stopBtn');
+
+  function buildExSel() {
+    var wrap = document.getElementById('exsel');
+    wrap.innerHTML = '';
+    Object.keys(EXERCISES).forEach(function (k) {
+      var b = document.createElement('button');
+      b.textContent = EXERCISES[k].name;
+      if (k === curKey) b.classList.add('on');
+      b.addEventListener('click', function () {
+        stopPacer();
+        curKey = k;
+        buildExSel();
+        showIdle();
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  var orbStage = document.getElementById('orbStage');
+  var waveStage = document.getElementById('waveStage');
+  var waveSliders = document.getElementById('waveSliders');
+  var wavePhase = document.getElementById('wavePhase');
+  var waveCanvas = document.getElementById('waveCanvas');
+  var wctx = waveCanvas.getContext('2d');
+  var spdRange = document.getElementById('spdRange');
+  var ampRange = document.getElementById('ampRange');
+  var ratioRange = document.getElementById('ratioRange');
+  var spdVal = document.getElementById('spdVal');
+  var ampVal = document.getElementById('ampVal');
+  var ratioVal = document.getElementById('ratioVal');
+  var waveRAF = null, wavePos = 0, waveLast = 0;
+
+  function isWave() { return !!EXERCISES[curKey].wave; }
+  function isCup() { return !!EXERCISES[curKey].cup; }
+
+  var cupStage = document.getElementById('cupStage');
+  var cupGlow = document.getElementById('cupGlow');
+  var cupPhase = document.getElementById('cupPhase');
+  var cupCount = document.getElementById('cupCount');
+
+  function setCupGlow(scale, secs) {
+    cupGlow.style.transition = 'transform ' + secs + 's ease-in-out, opacity ' + secs + 's ease-in-out';
+    cupGlow.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    // 吐くほど手の中が温かく明るくなる
+    cupGlow.style.opacity = Math.min(0.85, 0.2 + scale * 0.5);
+  }
+
+  /* --- ゆっくり吐く：プリセット（3:5 / 4:6） --- */
+  var EXHALE_PRESETS = [
+    { inSec: 3, outSec: 5, label: '3 : 5', sub: '短めでやさしい' },
+    { inSec: 4, outSec: 6, label: '4 : 6', sub: 'ゆったり標準' }
+  ];
+  var exhalePresetIdx = 1; // 初期＝4:6
+  var expBtnsWrap = document.getElementById('expBtns');
+  var expVal = document.getElementById('expVal');
+
+  function applyExhalePreset() {
+    var p = EXHALE_PRESETS[exhalePresetIdx];
+    EXERCISES.exhale.phases[0].secs = p.inSec;
+    EXERCISES.exhale.phases[1].secs = p.outSec;
+    expVal.textContent = '吸' + p.inSec + '秒 / 吐' + p.outSec + '秒';
+  }
+  function buildExhalePresets() {
+    expBtnsWrap.innerHTML = '';
+    EXHALE_PRESETS.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.innerHTML = p.label + '<span class="sub">' + p.sub + '</span>';
+      if (i === exhalePresetIdx) b.classList.add('on');
+      b.addEventListener('click', function () {
+        var wasRunning = running;
+        stopPacer();
+        exhalePresetIdx = i;
+        applyExhalePreset();
+        buildExhalePresets();
+        if (wasRunning) startPacer();
+      });
+      expBtnsWrap.appendChild(b);
+    });
+  }
+
+  /* --- ステップ：歩数のすすめ方（一定 / 徐々に伸ばす）。各5セット --- */
+  var STEP_MODES = [
+    { key: 'fixed',  label: '5歩 × 5',   sub: '一定のまま',   seq: [5, 5, 5, 5, 5],
+      hint: '<b style="color:var(--gold)">5歩</b>を5セット。まずはここから、無理なく' },
+    { key: 'fixed7', label: '7歩 × 5',   sub: '慣れてきたら', seq: [7, 7, 7, 7, 7],
+      hint: '<b style="color:var(--gold)">7歩</b>を5セット。5歩が快適になってきたら' },
+    { key: 'ramp',   label: '5→10歩',    sub: '徐々に伸ばす', seq: [5, 5, 7, 7, 10],
+      hint: '5→5→7→7→<b style="color:var(--gold)">10歩</b>と伸ばす5セット。<b style="color:var(--gold)">10歩が最大</b>です' }
+  ];
+  var stepModeIdx = 0;
+  var stepSetNo = 0;   // 今何セット目か（0始まり）
+  var STEP_TOTAL_SETS = 5;
+  var stepBtnsWrap = document.getElementById('stepBtns');
+  var stepPresetVal = document.getElementById('stepPresetVal');
+  var stepPresetsWrap = document.getElementById('stepPresets');
+  var stepHint = document.getElementById('stepHint');
+
+  function curStepMode() { return STEP_MODES[stepModeIdx]; }
+  function stepsForSet(n) {
+    var seq = curStepMode().seq;
+    return seq[Math.min(n, seq.length - 1)];
+  }
+  function applyStepPreset() {
+    var m = curStepMode();
+    EXERCISES.step.phases[2].secs = stepsForSet(stepSetNo);
+    stepPresetVal.textContent = m.seq.join('→') + '歩';
+    stepHint.innerHTML = m.hint;
+  }
+  function buildStepPresets() {
+    stepBtnsWrap.innerHTML = '';
+    STEP_MODES.forEach(function (m, i) {
+      var b = document.createElement('button');
+      b.innerHTML = m.label + '<span class="sub">' + m.sub + '</span>';
+      if (i === stepModeIdx) b.classList.add('on');
+      b.addEventListener('click', function () {
+        stopPacer();
+        stepModeIdx = i;
+        stepSetNo = 0;
+        applyStepPreset();
+        buildStepPresets();
+      });
+      stepBtnsWrap.appendChild(b);
+    });
+  }
+
+  /* --- カップハンド：プリセット（3:4 / 3:5 / 4:6） --- */
+  var CUP_PRESETS = [
+    { inSec: 3, outSec: 4, label: '3 : 4', sub: 'パニック時に' },
+    { inSec: 3, outSec: 5, label: '3 : 5', sub: '落ち着いてきたら' },
+    { inSec: 4, outSec: 6, label: '4 : 6', sub: 'ゆったり' }
+  ];
+  var cupPresetIdx = 0; // 初期＝3:4（苦しいときでも続けやすい）
+  var cupBtnsWrap = document.getElementById('cupBtns');
+  var cupPresetVal = document.getElementById('cupPresetVal');
+
+  function applyCupPreset() {
+    var p = CUP_PRESETS[cupPresetIdx];
+    EXERCISES.calm478.phases[0].secs = p.inSec;
+    EXERCISES.calm478.phases[1].secs = p.outSec;
+    cupPresetVal.textContent = '吸' + p.inSec + '秒 / 吐' + p.outSec + '秒';
+  }
+  function buildCupPresets() {
+    cupBtnsWrap.innerHTML = '';
+    CUP_PRESETS.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.innerHTML = p.label + '<span class="sub">' + p.sub + '</span>';
+      if (i === cupPresetIdx) b.classList.add('on');
+      b.addEventListener('click', function () {
+        var wasRunning = running;
+        stopPacer();
+        cupPresetIdx = i;
+        applyCupPreset();
+        buildCupPresets();
+        if (wasRunning) startPacer();
+      });
+      cupBtnsWrap.appendChild(b);
+    });
+  }
+
+  /* --- 短い息どめ：秒数スライダー（休憩は15秒固定） --- */
+  var hHoldRange = document.getElementById('hHoldRange');
+  var hHoldVal = document.getElementById('hHoldVal');
+
+  function applyHoldSecs() {
+    var h = parseInt(hHoldRange.value, 10);
+    // 吸う・吐くは「自然のまま」なので秒数は表示しない（内部的な目安のみ）
+    EXERCISES.hold.phases[2].secs = h;
+    EXERCISES.hold.phases[3].secs = 15; // 休憩は15秒固定
+    hHoldVal.textContent = h + '秒';
+  }
+  hHoldRange.addEventListener('input', function () { applyHoldSecs(); });
+
+  var tipTextEl = document.getElementById('tipText');
+  var exhalePresetsWrap = document.getElementById('exhalePresets');
+  var holdSlidersWrap = document.getElementById('holdSliders');
+  var cupPresetsWrap = document.getElementById('cupPresets');
+
+  function showIdle() {
+    var ex = EXERCISES[curKey];
+    capEl.innerHTML = ex.caption;
+    subEl.textContent = ex.sub;
+    cycEl.textContent = '';
+    if (tipTextEl) tipTextEl.innerHTML = ex.tip || '';
+    // 全ての調整UIをいったん隠す
+    waveSliders.classList.add('hidden');
+    exhalePresetsWrap.classList.add('hidden');
+    holdSlidersWrap.classList.add('hidden');
+    cupPresetsWrap.classList.add('hidden');
+    stepPresetsWrap.classList.add('hidden');
+
+    cupStage.classList.remove('on');
+
+    if (isWave()) {
+      orbStage.style.display = 'none';
+      waveStage.classList.add('on');
+      waveSliders.classList.remove('hidden');
+      wavePhase.textContent = '';
+      updateSliderLabels();
+      drawWaveStatic();
+    } else if (isCup()) {
+      orbStage.style.display = 'none';
+      waveStage.classList.remove('on');
+      cupStage.classList.add('on');
+      cupPhase.textContent = '';
+      cupCount.textContent = '';
+      setCupGlow(0.5, 0.3);
+      if (ex.cupPreset) {
+        cupPresetsWrap.classList.remove('hidden');
+        applyCupPreset();
+      }
+    } else {
+      orbStage.style.display = 'flex';
+      waveStage.classList.remove('on');
+      orbPhase.textContent = '準備';
+      orbCount.textContent = '';
+      orb.style.transition = 'transform .25s linear';
+      orb.style.transform = 'scale(1)';
+      if (ex.preset) {
+        exhalePresetsWrap.classList.remove('hidden');
+        applyExhalePreset();
+      }
+      if (ex.adjustable) {
+        holdSlidersWrap.classList.remove('hidden');
+        applyHoldSecs();
+      }
+      if (ex.stepPreset) {
+        stepPresetsWrap.classList.remove('hidden');
+        applyStepPreset();
+      }
+    }
+  }
+
+  /* --- 通常（円）モード --- */
+  function setOrb(scale, secs) {
+    orb.style.transition = 'transform ' + secs + 's ease-in-out';
+    orb.style.transform = 'scale(' + scale + ')';
+  }
+  function nextPhase() {
+    var ex = EXERCISES[curKey];
+    phaseIdx++;
+    if (phaseIdx >= ex.phases.length) {
+      phaseIdx = 0; cycleCount++;
+      if (ex.stepMode) {
+        // 1周＝1セット。5セットで終了
+        stepSetNo++;
+        if (stepSetNo >= STEP_TOTAL_SETS) {
+          finishStepSession();
+          return;
+        }
+        applyStepPreset();   // 次のセットの歩数を反映（漸進モード用）
+        cycEl.textContent = (stepSetNo + 1) + ' / ' + STEP_TOTAL_SETS + ' セット目（' + stepsForSet(stepSetNo) + '歩）';
+      } else {
+        cycEl.textContent = cycleCount + ' 呼吸';
+      }
+    }
+    runPhase();
+  }
+
+  function finishStepSession() {
+    if (timer) { clearInterval(timer); clearTimeout(timer); } timer = null;
+    running = false;
+    startBtn.classList.remove('hidden');
+    stopBtn.classList.add('hidden');
+    orbPhase.textContent = 'おつかれさま';
+    orbCount.textContent = '';
+    orb.style.transition = 'transform .6s ease-in-out';
+    orb.style.transform = 'scale(1.15)';
+    cycEl.textContent = '5セット完了';
+    stepSetNo = 0;
+    applyStepPreset();
+  }
+
+  function runPhase() {
+    var ex = EXERCISES[curKey];
+    var ph = ex.phases[phaseIdx];
+    var cup = isCup();
+    var phaseEl = cup ? cupPhase : orbPhase;
+    var countEl = cup ? cupCount : orbCount;
+
+    phaseEl.textContent = ph.label;
+    if (cup) setCupGlow(ph.scale, ph.secs); else setOrb(ph.scale, ph.secs);
+    if (timer) { clearInterval(timer); clearTimeout(timer); }
+
+    if (ph.silent) {
+      // 秒数を数えないフェーズ（自然な呼吸）。小数秒に正確に対応。
+      countEl.textContent = '';
+      timer = setTimeout(nextPhase, ph.secs * 1000);
+    } else {
+      // カウントを 1,2,3,4… と数え上げるフェーズ
+      var unit = (ph.counting === 'steps') ? '歩' : '';
+      var fmt = function (n) {
+        return unit ? (n + unit + ' / ' + ph.secs + unit) : (n + ' / ' + ph.secs);
+      };
+      var elapsed = 1;
+      countEl.textContent = fmt(elapsed);
+      timer = setInterval(function () {
+        elapsed++;
+        if (elapsed > ph.secs) {
+          nextPhase();
+        } else {
+          countEl.textContent = fmt(elapsed);
+        }
+      }, 1000);
+    }
+  }
+
+  /* --- 波モード ---
+     ・波は左 → 右 へ流れる
+     ・スピードを上げると波の幅が狭まり、画面上の波の数が増える（＝呼吸数が増える）
+     ・吸1 : 吐1.5 の非対称波形（吸う息は短く、吐く息は長く）
+     ・波が低いほど1回の呼吸量が少ない＝ブリーズライトの狙い
+  --------------------------------------------------------- */
+  var SEC_PER_SCREEN = 12;      // 画面の横幅がおよそ何秒ぶんの呼吸を映すか（固定）
+
+  // スピード: 1呼吸あたりの秒数。ゆっくり(0)=10秒 → 速い(100)=3秒
+  function periodSec() { return 10 - (parseInt(spdRange.value, 10) / 100) * 7; }
+  // 振幅: 波の高さ。少なく(0)=8% → 多く(100)=44%（キャンバス高さ比）
+  function ampRatio() { return 0.08 + (parseInt(ampRange.value, 10) / 100) * 0.36; }
+  // 吸う:吐く の比率。スライダー10〜30 → 吐く側 1.0〜3.0倍
+  function exhaleMult() { return parseInt(ratioRange.value, 10) / 10; }
+  // 1周期のうち吸気が占める割合
+  function inhaleRatio() { return 1 / (1 + exhaleMult()); }
+
+  function updateSliderLabels() {
+    var p = periodSec();
+    var bpm = Math.round((60 / p) * 10) / 10;
+    spdVal.textContent = p.toFixed(1) + '秒/呼吸（約' + bpm + '回/分）';
+    var a = parseInt(ampRange.value, 10);
+    ampVal.textContent = a < 33 ? '少なめ ◎' : (a < 66 ? 'ふつう' : '多め');
+    var m = exhaleMult();
+    var inSec = p * inhaleRatio();
+    var outSec = p - inSec;
+    ratioVal.textContent = '1 : ' + m.toFixed(1) + '（吸' + inSec.toFixed(1) + '秒 / 吐' + outSec.toFixed(1) + '秒）';
+  }
+  spdRange.addEventListener('input', function () { updateSliderLabels(); if (!running) drawWaveStatic(); });
+  ampRange.addEventListener('input', function () { updateSliderLabels(); if (!running) drawWaveStatic(); });
+  ratioRange.addEventListener('input', function () { updateSliderLabels(); if (!running) drawWaveStatic(); });
+
+  // 位相 u（0〜1、1周期）から高さ（-1〜+1）を返す非対称波形
+  // u: 0→inhaleRatio() が吸気（谷→山）、inhaleRatio()→1 が呼気（山→谷）
+  function waveHeight(u) {
+    u = u - Math.floor(u); // 0..1 に正規化
+    var ir = inhaleRatio();
+    if (u < ir) {
+      var t = u / ir;                           // 0→1（吸気）
+      return -Math.cos(Math.PI * t);            // -1 → +1（なめらかに上昇）
+    } else {
+      var t2 = (u - ir) / (1 - ir);             // 0→1（呼気）
+      return Math.cos(Math.PI * t2);            // +1 → -1（ゆっくり下降）
+    }
+  }
+  function isInhalePhase(u) {
+    u = u - Math.floor(u);
+    return u < inhaleRatio();
+  }
+
+  function drawWave(elapsed) {
+    var W = waveCanvas.width, H = waveCanvas.height;
+    wctx.clearRect(0, 0, W, H);
+    var mid = H / 2;
+    var amp = ampRatio() * H * 0.5;
+    var cs = getComputedStyle(document.body);
+    var teal = cs.getPropertyValue('--teal').trim() || '#6cc3bf';
+    var rule = cs.getPropertyValue('--rule').trim() || '#2a313c';
+    var bg = cs.getPropertyValue('--bg').trim() || '#10141a';
+    var period = periodSec();
+
+    // 中央線
+    wctx.strokeStyle = rule; wctx.lineWidth = 2;
+    wctx.beginPath(); wctx.moveTo(0, mid); wctx.lineTo(W, mid); wctx.stroke();
+
+    // 各xは「時刻」に対応。左端が過去、右端が未来。波は左→右へ流れる。
+    // x=cx（現在位置）で u = elapsed/period となるようにする。
+    var cx = W / 2;
+    function uAt(x) {
+      var tAtX = elapsed + ((x - cx) / W) * SEC_PER_SCREEN;
+      return tAtX / period;
+    }
+
+    wctx.beginPath();
+    for (var x = 0; x <= W; x += 3) {
+      var y = mid - waveHeight(uAt(x)) * amp;
+      if (x === 0) wctx.moveTo(x, y); else wctx.lineTo(x, y);
+    }
+    wctx.strokeStyle = teal; wctx.lineWidth = 5; wctx.lineJoin = 'round'; wctx.lineCap = 'round';
+    wctx.stroke();
+
+    // 現在位置（中央）のマーカー
+    var uC = uAt(cx);
+    var yC = mid - waveHeight(uC) * amp;
+    wctx.fillStyle = teal;
+    wctx.beginPath(); wctx.arc(cx, yC, 9, 0, 2 * Math.PI); wctx.fill();
+    wctx.strokeStyle = bg; wctx.lineWidth = 3; wctx.stroke();
+
+    // 現在位置の縦ガイド
+    wctx.strokeStyle = rule; wctx.lineWidth = 1.5;
+    wctx.beginPath(); wctx.moveTo(cx, 0); wctx.lineTo(cx, H); wctx.stroke();
+
+    wavePhase.textContent = running ? (isInhalePhase(uC) ? '吸う' : '吐く') : '';
+  }
+  function drawWaveStatic() { drawWave(0); }
+
+  function waveTick(ts) {
+    if (!waveLast) waveLast = ts;
+    var dt = (ts - waveLast) / 1000; waveLast = ts;
+    wavePos += dt;              // wavePos = 経過秒
+    drawWave(wavePos);
+    waveRAF = requestAnimationFrame(waveTick);
+  }
+
+  function startPacer() {
+    running = true; phaseIdx = 0; cycleCount = 0;
+    startBtn.classList.add('hidden');
+    stopBtn.classList.remove('hidden');
+    if (EXERCISES[curKey].stepMode) {
+      stepSetNo = 0;
+      applyStepPreset();
+      cycEl.textContent = '1 / ' + STEP_TOTAL_SETS + ' セット目（' + stepsForSet(0) + '歩）';
+    }
+    if (isWave()) {
+      wavePos = 0; waveLast = 0;
+      if (waveRAF) cancelAnimationFrame(waveRAF);
+      waveRAF = requestAnimationFrame(waveTick);
+    } else {
+      runPhase();
+    }
+  }
+  function stopPacer() {
+    running = false;
+    stepSetNo = 0;
+    if (timer) { clearInterval(timer); clearTimeout(timer); } timer = null;
+    if (waveRAF) cancelAnimationFrame(waveRAF); waveRAF = null; waveLast = 0;
+    startBtn.classList.remove('hidden');
+    stopBtn.classList.add('hidden');
+    showIdle();
+  }
+  startBtn.addEventListener('click', startPacer);
+  stopBtn.addEventListener('click', stopPacer);
+
+  /* ======================================================
+     CP測定（測りたいときだけ・記録を貯める）
+     ====================================================== */
+  var CPKEY = 'ac_cp_v1';
+  var cpNum = document.getElementById('cpNum');
+  var cpInst = document.getElementById('cpInst');
+  var cpStartBtn = document.getElementById('cpStart');
+  var cpStopBtn = document.getElementById('cpStop');
+  var cpResult = document.getElementById('cpResult');
+  var cpListEl = document.getElementById('cpList');
+  var cpLatestEl = document.getElementById('cpLatest');
+  var cpTimer = null, cpSec = 0;
+
+  function loadCP() { try { return JSON.parse(localStorage.getItem(CPKEY)) || []; } catch (e) { return []; } }
+  function saveCP(a) { try { localStorage.setItem(CPKEY, JSON.stringify(a)); } catch (e) {} }
+  function latestCP() { var a = loadCP(); return a.length ? a[0].cp : null; }
+
+  function cpBand(v) { return v < 15 ? '15秒未満' : '15秒以上'; }
+
+  /* --- CPに応じたデフォルト設定 --- */
+  function applyCPDefaults() {
+    var cp = latestCP();
+    var low = (cp === null) ? true : (cp < 15);   // 未測定は控えめ側を既定に
+    if (low) {
+      exhalePresetIdx = 0;              // ゆっくり吐く 3:5
+      spdRange.value = 57;              // ブリーズライト ≒6秒/呼吸
+      ampRange.value = 50;              // 高さ ふつう
+      ratioRange.value = 15;            // 1 : 1.5
+      hHoldRange.value = 3;             // 短い息どめ 3秒
+    } else {
+      exhalePresetIdx = 1;              // ゆっくり吐く 4:6
+      spdRange.value = 29;              // ブリーズライト ≒8秒/呼吸
+      ampRange.value = 22;              // 高さ 低め
+      ratioRange.value = 20;            // 1 : 2
+      hHoldRange.value = 5;             // 短い息どめ 5秒
+    }
+    applyExhalePreset();
+    buildExhalePresets();
+    applyHoldSecs();
+    updateSliderLabels();
+  }
+
+  function renderCP() {
+    var arr = loadCP();
+    var cur = latestCP();
+    cpLatestEl.textContent = (cur === null) ? '' : ('最新 ' + cur + '秒（' + cpBand(cur) + '）');
+    if (!arr.length) {
+      cpListEl.innerHTML = '<div class="cp-empty">まだ記録はありません</div>';
+      return;
+    }
+    cpListEl.innerHTML = '';
+    arr.slice(0, 20).forEach(function (r, i) {
+      var row = document.createElement('div');
+      row.className = 'cp-row';
+      row.innerHTML = '<span class="date">' + r.date + '</span>' +
+                      '<span class="sec">' + r.cp + '秒</span>' +
+                      '<span class="band">' + cpBand(r.cp) + '</span>' +
+                      '<button class="del" title="削除">✕</button>';
+      row.querySelector('.del').addEventListener('click', function () {
+        var a = loadCP();
+        var idx = a.findIndex(function (x) { return x.ts === r.ts; });
+        if (idx >= 0) { a.splice(idx, 1); saveCP(a); renderCP(); applyCPDefaults(); }
+      });
+      cpListEl.appendChild(row);
+    });
+  }
+
+  var cpCalm = document.getElementById('cpCalm');
+
+  function cpTick() { cpSec++; }   // 測定中は秒数を表示しない
+
+  cpStartBtn.addEventListener('click', function () {
+    cpSec = 0;
+    // 数字を隠し、落ち着く表示に切り替える
+    cpNum.style.display = 'none';
+    cpCalm.classList.add('on');
+    cpInst.textContent = '鼻から息を吸って、鼻から自然に吐いて、鼻をつまんで息を止めましょう…　「息をしたい」と思ったタイミングでボタンを押してください';
+    cpResult.classList.add('hidden');
+    cpStartBtn.classList.add('hidden');
+    cpStopBtn.classList.remove('hidden');
+    if (cpTimer) clearInterval(cpTimer);
+    cpTimer = setInterval(cpTick, 1000);
+  });
+  cpStopBtn.addEventListener('click', function () {
+    if (cpTimer) clearInterval(cpTimer); cpTimer = null;
+    // 測定が終わってから結果の数字を出す
+    cpCalm.classList.remove('on');
+    cpNum.style.display = '';
+    cpNum.innerHTML = cpSec + '<span class="u">秒</span>';
+    cpStartBtn.classList.remove('hidden');
+    cpStopBtn.classList.add('hidden');
+    cpInst.textContent = '鼻から自然に呼吸を再開してください';
+    if (cpSec > 0) {
+      var now = new Date();
+      var rec = {
+        ts: now.getTime(),
+        date: (now.getMonth() + 1) + '/' + now.getDate() + ' ' + ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2),
+        cp: cpSec
+      };
+      var a = loadCP(); a.unshift(rec); saveCP(a);
+      var msg = (cpSec < 15)
+        ? 'ゆっくりめの設定にしました。<b>回復呼吸を中心に</b>、無理のない範囲で進めましょう。'
+        : 'ゆったりした設定にしました。<b>ブリーズライト</b>もじっくり取り組めます。';
+      cpResult.innerHTML = '<b>' + cpSec + '秒</b>（' + cpBand(cpSec) + '）で記録しました。<br>' + msg +
+        '<br><span style="color:var(--muted);font-size:12.5px;">※ 放したあと呼吸が乱れたなら、少し長く我慢しすぎたサインです。</span>';
+      cpResult.classList.remove('hidden');
+      renderCP();
+      applyCPDefaults();
+    }
+  });
+
+  buildExhalePresets();
+  applyExhalePreset();
+  buildCupPresets();
+  applyCupPreset();
+  buildStepPresets();
+  applyStepPreset();
+  applyHoldSecs();
+  renderCP();
+  applyCPDefaults();
+  buildExSel();
+  showIdle();
+
+  /* ======================================================
+     パニックSOS（オーバーレイ誘導）
+     ====================================================== */
+  var sosSeq = [
+    { phase: '準備', inst: '両手をカップ状にして、鼻と口をやさしく覆ってください', count: '', scale: 1, hold: 0 },
+    { phase: '吸う', inst: '手の中に、鼻からゆっくり吸う', count: '2・3', scale: 1.8, hold: 3 },
+    { phase: '吐く', inst: '手の中に、ゆっくり吐く', count: '2・3', scale: 1.0, hold: 3 },
+    { phase: '吸う', inst: 'あわてず、もう一度ゆっくり吸う', count: '2・3', scale: 1.8, hold: 3 },
+    { phase: '吐く', inst: 'ゆっくり、長めに吐く', count: '2・3・4', scale: 1.0, hold: 4 },
+    { phase: 'そのまま', inst: '低く、鼻で、ゆっくり。落ち着くまで繰り返してOK', count: '', scale: 1.2, hold: 0 }
+  ];
+  var sosOverlay = document.getElementById('sosOverlay');
+  var sosOrb = document.getElementById('sosOrb');
+  var sosPhase = document.getElementById('sosPhase');
+  var sosInst = document.getElementById('sosInst');
+  var sosCount = document.getElementById('sosCount');
+  var sosNext = document.getElementById('sosNext');
+  var sosStep = 0, sosTimer = null;
+
+  function sosShow(i) {
+    var s = sosSeq[i];
+    sosPhase.textContent = s.phase;
+    sosInst.textContent = s.inst;
+    sosCount.textContent = s.count;
+    sosOrb.style.transition = 'transform ' + (s.hold || 1) + 's ease-in-out';
+    sosOrb.style.transform = 'scale(' + s.scale + ')';
+    sosNext.textContent = (i >= sosSeq.length - 1) ? 'とじる' : '次へ';
+  }
+  function sosOpen() {
+    sosStep = 0; sosOverlay.classList.add('on'); sosShow(0);
+    // 自動進行（吸う・吐くのリズム）。準備と最後は手動。
+    if (sosTimer) clearInterval(sosTimer);
+  }
+  function sosClose() {
+    sosOverlay.classList.remove('on');
+    if (sosTimer) clearInterval(sosTimer);
+  }
+  document.getElementById('sosStart').addEventListener('click', sosOpen);
+  document.getElementById('sosClose').addEventListener('click', sosClose);
+  sosNext.addEventListener('click', function () {
+    if (sosStep >= sosSeq.length - 1) { sosClose(); return; }
+    sosStep++; sosShow(sosStep);
+  });
+
+  /* ======================================================
+     今日の実践チェック（localStorage、数値なし）
+     ====================================================== */
+  var PRACTICES = [
+    { id: 'nose', t: '鼻で呼吸を意識した', d: '日中も、できるだけ口を閉じて鼻で', when: '一日' },
+    { id: 'exhale', t: 'ゆっくり吐く呼吸をした', d: 'ざわついた時・人前の前に', when: '随時' },
+    { id: 'light', t: 'ブリーズライト（軽い呼吸）', d: '5分ほど、軽い空気飢餓感を心地よく', when: '日中' },
+    { id: 'walk', t: '口を閉じて歩いた', d: '散歩・移動を鼻呼吸で', when: '日中' },
+    { id: 'step', t: 'ステップ（歩きながらの息こらえ）', d: '5〜10歩、息を止めて歩く。心の勢いを鎮める', when: '随時' },
+    { id: 'night', t: '就寝前にゆっくり呼吸した', d: '吐く息を長めに、脳に安全を伝える', when: '夜' }
+  ];
+  var PKEY = 'ac_practice_v1';
+
+  function loadP() { try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } }
+  function saveP(d) { try { localStorage.setItem(PKEY, JSON.stringify(d)); } catch (e) {} }
+  function dstr(dt) { dt = dt || new Date(); return dt.getFullYear() + '-' + ('0'+(dt.getMonth()+1)).slice(-2) + '-' + ('0'+dt.getDate()).slice(-2); }
+
+  function renderToday() {
+    var data = loadP();
+    var today = dstr();
+    var todo = data[today] || {};
+    var list = document.getElementById('practiceList');
+    list.innerHTML = '';
+    PRACTICES.forEach(function (p) {
+      var li = document.createElement('li');
+      if (todo[p.id]) li.classList.add('done');
+      li.innerHTML = '<span class="box">✓</span><span class="txt"><span class="t">' + p.t + '</span><span class="d">' + p.d + '</span></span><span class="when">' + p.when + '</span>';
+      li.addEventListener('click', function () {
+        var d = loadP(); if (!d[today]) d[today] = {};
+        d[today][p.id] = !d[today][p.id];
+        if (!d[today][p.id]) delete d[today][p.id];
+        saveP(d); renderToday();
+      });
+      list.appendChild(li);
+    });
+    // streak（連続で1つ以上チェックした日数）
+    var streak = 0, cur = new Date();
+    while (true) {
+      var k = dstr(cur);
+      if (data[k] && Object.keys(data[k]).length > 0) { streak++; cur.setDate(cur.getDate() - 1); }
+      else break;
+    }
+    document.getElementById('streak').textContent = streak > 0 ? '🔥 ' + streak + '日つづけて実践中' : '';
+    // 週ドット
+    var wd = document.getElementById('weekdots');
+    wd.innerHTML = '';
+    var labels = ['日','月','火','水','木','金','土'];
+    var base = new Date(); base.setDate(base.getDate() - 6);
+    var head = document.createElement('div'); head.style.display = 'contents';
+    for (var i = 0; i < 7; i++) {
+      var dt = new Date(base); dt.setDate(base.getDate() + i);
+      var k = dstr(dt);
+      var col = document.createElement('div');
+      col.style.display = 'flex'; col.style.flexDirection = 'column'; col.style.alignItems = 'center'; col.style.gap = '4px';
+      var lab = document.createElement('div'); lab.className = 'd'; lab.textContent = labels[dt.getDay()];
+      var dot = document.createElement('div'); dot.className = 'dot';
+      var cnt = (data[k] ? Object.keys(data[k]).length : 0);
+      if (cnt > 0) { dot.classList.add('has'); dot.textContent = cnt; }
+      if (k === dstr()) dot.classList.add('today');
+      col.appendChild(lab); col.appendChild(dot); wd.appendChild(col);
+    }
+  }
+  renderToday();
+})();
+
+function toggleAudio(id) {
+  var card = document.getElementById(id);
+  var player = card.querySelector('.audio-player-wrap');
+  var arrow = card.querySelector('.audio-arrow');
+  var isOpen = player.style.display !== 'none';
+  player.style.display = isOpen ? 'none' : 'block';
+  arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
+  arrow.textContent = isOpen ? '▶' : '▼';
+}
+</script>
+</body>
+</html>
