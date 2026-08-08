@@ -152,7 +152,7 @@
     .cp-halo, .mote { animation-duration: 24s !important; }
   }
 
-  .cp-result { margin-top: 16px; padding: 14px 16px; border-radius: 12px; background: var(--step-bg); font-size: 14px; color: var(--ink-soft); text-align: left; line-height: 1.7; }
+  .cp-result { margin-top: 16px; padding: 14px 16px; border-radius: 12px; background: var(--card); font-size: 14px; color: var(--ink-soft); text-align: left; line-height: 1.7; }
   .cp-result b { color: var(--gold); }
   .cp-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--rule); font-size: 14px; }
   .cp-row:last-child { border-bottom: none; }
@@ -465,7 +465,7 @@
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
 
       <div id="audio-awareness" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
-        <div onclick="toggleAudio('audio-awareness')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+        <div onclick="toggleAudio('audio-awareness')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
           <span style="font-size:20px;">🌬️</span>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:700;color:var(--ink);">気づきの呼吸エクササイズ</div>
@@ -484,7 +484,7 @@
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
 
       <div id="audio-breathe-light" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
-        <div onclick="toggleAudio('audio-breathe-light')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+        <div onclick="toggleAudio('audio-breathe-light')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
           <span style="font-size:20px;">😌</span>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:700;color:var(--ink);">リラクゼーションとブリーズライト</div>
@@ -503,7 +503,7 @@
     <div style="display:flex;flex-direction:column;gap:8px;">
 
       <div id="audio-sleep-main" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
-        <div onclick="toggleAudio('audio-sleep-main')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+        <div onclick="toggleAudio('audio-sleep-main')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
           <span style="font-size:20px;">😴</span>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:700;color:var(--ink);">スリープ・イージー</div>
@@ -517,7 +517,7 @@
       </div>
 
       <div id="audio-sleep-piano" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
-        <div onclick="toggleAudio('audio-sleep-piano')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+        <div onclick="toggleAudio('audio-sleep-piano')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
           <span style="font-size:20px;">🎹</span>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:700;color:var(--ink);">スリープイージー（ピアノ）</div>
@@ -531,7 +531,7 @@
       </div>
 
       <div id="audio-sleep-green" style="border:1px solid var(--rule);border-radius:6px;overflow:hidden;">
-        <div onclick="toggleAudio('audio-sleep-green')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:#f0f9f9;">
+        <div onclick="toggleAudio('audio-sleep-green')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;background:var(--bg-2);">
           <span style="font-size:20px;">🌿</span>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:700;color:var(--ink);">スリープイージー（グリーン）</div>
@@ -587,7 +587,7 @@
       <div id="cpList"></div>
     </div>
 
-    <div class="note" style="border-color:var(--teal-dim);">
+    <div class="note" style="border-color:var(--teal);">
       <span class="lab">CPと呼吸法のおすすめ設定</span>
       測ったCPに合わせて、各呼吸法の初期設定が自動で切り替わります。<br>
       <b>CP 15秒未満</b>：ゆっくり吐く 3:5 ／ ブリーズライト 6秒・高さふつう・1:1.5 ／ 短い息どめ 3秒<br>
