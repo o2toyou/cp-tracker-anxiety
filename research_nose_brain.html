@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鼻から脳への道｜研究紹介｜落ち着きコンパニオン</title>
+<style>
+  :root {
+    --bg: #10141a; --bg-2: #171c24; --card: #1c222c;
+    --ink: #eceae3; --ink-soft: #b9c0c9; --muted: #7f8a96;
+    --teal: #6cc3bf; --teal-deep: #2f8f8b; --gold: #e0ad5a;
+    --rule: #2a313c; --safe: #e79178; --safe-bg: #2c2020;
+    --ring-bg: #232b36;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f3f1ea; --bg-2: #eae7dd; --card: #ffffff;
+      --ink: #232830; --ink-soft: #454d57; --muted: #6d7681;
+      --teal: #2f8f8b; --teal-deep: #1f6a67; --gold: #9a6f1e;
+      --rule: #ded9cd; --safe: #b0432f; --safe-bg: #fbece8;
+      --ring-bg: #e7e3d8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10141a; --bg-2: #171c24; --card: #1c222c;
+    --ink: #eceae3; --ink-soft: #b9c0c9; --muted: #7f8a96;
+    --teal: #6cc3bf; --teal-deep: #2f8f8b; --gold: #e0ad5a;
+    --rule: #2a313c; --safe: #e79178; --safe-bg: #2c2020;
+    --ring-bg: #232b36;
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f1ea; --bg-2: #eae7dd; --card: #ffffff;
+    --ink: #232830; --ink-soft: #454d57; --muted: #6d7681;
+    --teal: #2f8f8b; --teal-deep: #1f6a67; --gold: #9a6f1e;
+    --rule: #ded9cd; --safe: #b0432f; --safe-bg: #fbece8;
+    --ring-bg: #e7e3d8;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+    line-height: 1.8; -webkit-font-smoothing: antialiased;
+    max-width: 560px; margin: 0 auto; min-height: 100vh; padding-bottom: 40px;
+  }
+  .mincho { font-family: "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", serif; }
+
+  header { padding: 20px 20px 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  header .brand { font-size: 11px; letter-spacing: .16em; color: var(--teal); font-weight: 700; }
+  header .brand .ttl { display: block; font-size: 17px; color: var(--ink); letter-spacing: .02em; margin-top: 2px; font-weight: 700; }
+  header .back { border: 1px solid var(--rule); background: var(--card); color: var(--ink-soft);
+    border-radius: 999px; padding: 7px 14px; font-size: 13px; text-decoration: none; flex-shrink: 0; }
+
+  main { padding: 8px 20px 20px; }
+  h1 { font-size: 21px; line-height: 1.55; margin: 8px 0 10px; }
+  h2 { font-size: 16px; color: var(--gold); margin: 30px 0 8px; }
+  p { color: var(--ink-soft); font-size: 14.5px; margin: 0 0 12px; }
+  b { color: var(--ink); }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 16px; }
+  .tags span { font-size: 11.5px; border: 1px solid var(--rule); border-radius: 6px; padding: 2px 9px; color: var(--teal); background: var(--card); }
+  .tags span.mouse { color: var(--gold); }
+
+  .lead { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 16px 18px; margin: 0 0 8px; }
+  .lead p { margin: 0; color: var(--ink); font-size: 15px; }
+
+  /* 用語の注釈 */
+  .gloss { margin: 4px 0 14px; padding: 10px 14px; border-left: 3px solid var(--teal); background: var(--bg-2); border-radius: 0 10px 10px 0; }
+  .gloss dt { font-size: 13px; font-weight: 700; color: var(--teal); margin-top: 6px; }
+  .gloss dt:first-child { margin-top: 0; }
+  .gloss dt .en { font-weight: 500; color: var(--muted); font-size: 11.5px; margin-left: 4px; }
+  .gloss dd { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+
+  /* 周波数の比較 */
+  .note-s { font-size: 12.5px; color: var(--muted); margin: -2px 0 8px; }
+  .freq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 14px; }
+  .freq > div { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 6px; text-align: center; }
+  .freq .hz { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); line-height: 1.2; }
+  .freq .nm { font-size: 11.5px; color: var(--muted); }
+  .freq .ef { font-size: 13px; font-weight: 700; margin-top: 6px; }
+  .freq .down .ef { color: var(--teal); }
+  .freq .flat .ef { color: var(--muted); }
+  .freq .up .ef { color: var(--safe); }
+  .freq .down { border-color: var(--teal); }
+
+  .fig { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 14px 10px 10px; margin: 10px 0 6px; }
+  .fig svg { width: 100%; height: auto; display: block; }
+  .fig .cap { font-size: 11.5px; color: var(--muted); text-align: center; margin-top: 6px; }
+
+  .steps { list-style: none; padding: 0; margin: 10px 0 14px; display: flex; flex-direction: column; gap: 8px; }
+  .steps li { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink-soft); display: flex; gap: 12px; }
+  .steps li .d { flex-shrink: 0; min-width: 52px; color: var(--teal); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .bridge { background: color-mix(in srgb, var(--teal) 12%, var(--card)); border: 1px solid var(--teal); border-radius: 14px; padding: 16px 18px; margin: 12px 0; }
+  .bridge p { color: var(--ink); margin-bottom: 8px; }
+  .bridge p:last-child { margin-bottom: 0; }
+
+  .limits { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px 12px 34px; margin: 10px 0; }
+  .limits li { font-size: 13.5px; color: var(--ink-soft); margin: 4px 0; }
+
+  .btn { display: block; text-align: center; text-decoration: none; border-radius: 12px; padding: 14px 22px; font-size: 15px; font-weight: 700; margin: 24px 0 8px; background: var(--teal); color: #fff; }
+
+  .ref { font-size: 12px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--rule); margin-top: 26px; padding-top: 14px; }
+  .ref a { color: var(--teal); word-break: break-all; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">ANXIETY CLINIC｜研究紹介
+    <span class="ttl mincho">落ち着きコンパニオン</span>
+  </div>
+  <a class="back" href="./">← アプリへ</a>
+</header>
+
+<main>
+  <h1 class="mincho">鼻を通る息のリズムが、<br>不安の中枢に届く道</h1>
+  <div class="tags">
+    <span class="mouse">マウスの研究</span>
+    <span>PNAS 2026年8月</span>
+    <span>復旦大学ほか</span>
+  </div>
+
+  <div class="lead">
+    <p>「鼻でゆっくり呼吸すると落ち着く」ことは、ヨガや瞑想の伝統でも、臨床研究でも知られてきました。けれど、その信号が<b>脳のどこを通って</b>不安を変えるのかは、わかっていませんでした。この研究は、その道筋の一つをマウスで見つけました。</p>
+  </div>
+
+  <!-- ===== やったこと ===== -->
+  <h2>何を調べたのか</h2>
+  <p>鼻の奥の<b>嗅覚神経細胞</b>を、決まったリズムで刺激しました。方法は2通りです。<b>光遺伝学</b>で神経を直接働かせる方法と、鼻に入れた細い管から空気を送る方法です。</p>
+  <p>マウス自身の呼吸を変えたのではありません。<b>鼻に届く刺激のリズム</b>を外から操作しています。</p>
+  <dl class="gloss">
+    <dt>嗅覚神経細胞<span class="en">olfactory sensory neuron, OSN</span></dt>
+    <dd>鼻の奥にある、においを感じる神経細胞。においのほかに、鼻を通る空気の流れ（圧）にも反応します（機械感受性）。</dd>
+    <dt>光遺伝学<span class="en">optogenetics</span></dt>
+    <dd>光に反応するたんぱく質を特定の神経細胞に組み込み、光を当ててその細胞を狙って働かせる、動物実験の方法です。</dd>
+  </dl>
+  <p>刺激の速さは、マウスのふだんの呼吸に近い<b>4Hz</b>を基準に、ゆっくりの<b>2Hz</b>、速い<b>7Hz</b>の3段階です。不安の度合いは<b>不安様行動</b>で測りました。</p>
+  <dl class="gloss">
+    <dt>Hz（ヘルツ）</dt>
+    <dd>1秒あたりの回数。2Hzは1秒に2回です。</dd>
+    <dt>不安様行動<span class="en">anxiety-like behavior</span></dt>
+    <dd>動物には気持ちを聞けないため、行動から不安の度合いを推し量ります。<b>高架式十字迷路</b>（高い所に置いた十字の通路。壁のない通路にいる時間が長いほど不安が低い）と<b>オープンフィールド</b>（広い箱。不安が強いと壁際にいて、真ん中にいる時間が短くなる）を使いました。</dd>
+  </dl>
+
+  <!-- ===== わかったこと1 ===== -->
+  <h2>1. 刺激のリズムで、不安が上下した</h2>
+  <p class="note-s">光で嗅覚神経細胞を刺激した実験。正常なマウスの結果です。</p>
+  <div class="freq">
+    <div class="down"><div class="hz">2Hz</div><div class="nm">ふつうの半分</div><div class="ef">不安が減る</div></div>
+    <div class="flat"><div class="hz">4Hz</div><div class="nm">ふつう</div><div class="ef">変わらない</div></div>
+    <div class="up"><div class="hz">7Hz</div><div class="nm">速い</div><div class="ef">不安が増える</div></div>
+  </div>
+  <p>1Hzでも不安は減り、10Hzでは増えました。光の1回あたりの長さや、全体の刺激量をそろえても、頻度による違いは変わりませんでした。不安を左右していたのは<b>刺激の回数（リズム）</b>でした。</p>
+
+  <!-- ===== わかったこと2 ===== -->
+  <h2>2. 信号の通り道</h2>
+  <div class="fig">
+    <svg viewBox="0 0 320 470" role="img" aria-label="鼻の嗅覚神経細胞から嗅球、嗅周皮質のPV介在ニューロンを経て扁桃体後部に至る経路の模式図">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" style="fill:var(--teal)"/>
+        </marker>
+      </defs>
+      <!-- 1 鼻 -->
+      <rect x="40" y="8" width="240" height="62" rx="12" style="fill:var(--bg-2);stroke:var(--rule)"/>
+      <text x="160" y="34" text-anchor="middle" style="fill:var(--ink);font-size:15px;font-weight:700">鼻の嗅覚神経細胞</text>
+      <text x="160" y="56" text-anchor="middle" style="fill:var(--muted);font-size:12px">息のリズムを受け取る</text>
+      <line x1="160" y1="70" x2="160" y2="100" style="stroke:var(--teal);stroke-width:2.5" marker-end="url(#ar)"/>
+      <!-- 2 嗅球 -->
+      <rect x="40" y="104" width="240" height="62" rx="12" style="fill:var(--bg-2);stroke:var(--rule)"/>
+      <text x="160" y="130" text-anchor="middle" style="fill:var(--ink);font-size:15px;font-weight:700">嗅球（僧帽細胞）</text>
+      <text x="160" y="152" text-anchor="middle" style="fill:var(--muted);font-size:12px">鼻からの信号を最初に受ける</text>
+      <line x1="160" y1="166" x2="160" y2="196" style="stroke:var(--teal);stroke-width:2.5" marker-end="url(#ar)"/>
+      <!-- 3 嗅周皮質 -->
+      <rect x="40" y="200" width="240" height="70" rx="12" style="fill:var(--card);stroke:var(--teal);stroke-width:2"/>
+      <text x="160" y="226" text-anchor="middle" style="fill:var(--ink);font-size:15px;font-weight:700">嗅周皮質（PV介在ニューロン）</text>
+      <text x="160" y="248" text-anchor="middle" style="fill:var(--teal);font-size:12px">ゆっくり → 働く ／ 速い → 弱まる</text>
+      <text x="160" y="264" text-anchor="middle" style="fill:var(--muted);font-size:11px">リズムを読み分ける場所</text>
+      <!-- 抑制（T字） -->
+      <line x1="160" y1="270" x2="160" y2="312" style="stroke:var(--gold);stroke-width:2.5"/>
+      <line x1="140" y1="314" x2="180" y2="314" style="stroke:var(--gold);stroke-width:3.5"/>
+      <text x="190" y="292" style="fill:var(--gold);font-size:12px;font-weight:700">ブレーキをかける</text>
+      <text x="190" y="308" style="fill:var(--muted);font-size:10.5px">（著者の解釈）</text>
+      <!-- 4 扁桃体 -->
+      <rect x="40" y="320" width="240" height="62" rx="12" style="fill:var(--bg-2);stroke:var(--rule)"/>
+      <text x="160" y="346" text-anchor="middle" style="fill:var(--ink);font-size:15px;font-weight:700">扁桃体後部（興奮性ニューロン）</text>
+      <text x="160" y="368" text-anchor="middle" style="fill:var(--muted);font-size:12px">不安を生む中枢</text>
+      <line x1="160" y1="382" x2="160" y2="412" style="stroke:var(--teal);stroke-width:2.5" marker-end="url(#ar)"/>
+      <!-- 5 不安 -->
+      <rect x="90" y="416" width="140" height="44" rx="22" style="fill:var(--bg-2);stroke:var(--rule)"/>
+      <text x="160" y="444" text-anchor="middle" style="fill:var(--ink);font-size:14px;font-weight:700">不安様行動</text>
+    </svg>
+    <div class="cap">論文の結果をもとに作った模式図です（論文の図ではありません）</div>
+  </div>
+  <p>ゆっくりの信号は嗅周皮質の<b>PV介在ニューロン</b>を働かせました。著者は、この細胞が<b>扁桃体後部</b>の働きを抑えることで不安を減らしていると解釈しています。速い信号では逆に、PV介在ニューロンの働きが弱まり、不安が強まりました。嗅球から嗅周皮質への経路を<b>化学遺伝学</b>で止めると、リズムによる違いは消えました。</p>
+  <dl class="gloss">
+    <dt>嗅球<span class="en">olfactory bulb</span>／僧帽細胞<span class="en">mitral cell</span></dt>
+    <dd>嗅球は、鼻からの信号を最初に受け取る脳の部分。僧帽細胞は、そこから信号を奥へ送り出す神経細胞です。</dd>
+    <dt>嗅周皮質<span class="en">perirhinal cortex, PRC</span></dt>
+    <dd>側頭葉の内側にある皮質。物を見分ける働きや記憶で知られ、不安への関わりも報告されてきました。</dd>
+    <dt>PV介在ニューロン<span class="en">parvalbumin-positive interneuron</span></dt>
+    <dd>パルブアルブミンというたんぱく質を持つ、抑制性の神経細胞。周りの神経の働きを抑えます。この研究で見つかったのは、扁桃体まで長い線維を伸ばすタイプです。</dd>
+    <dt>扁桃体後部<span class="en">posterior basolateral amygdala, pBLA</span></dt>
+    <dd>扁桃体は、危険を察知し、不安や恐れを生む脳の中枢。この研究で関わっていたのは、その基底外側核の後ろ側の部分です。</dd>
+    <dt>化学遺伝学<span class="en">chemogenetics</span></dt>
+    <dd>特定の神経細胞に薬で反応する受容体を組み込み、薬を与えてその細胞を働かせたり止めたりする、動物実験の方法です。</dd>
+  </dl>
+
+  <!-- ===== わかったこと3 ===== -->
+  <h2>3. 前頭前野を通らなくても効く</h2>
+  <p><b>前頭前野</b>（背内側部）の興奮性ニューロンを薬で抑えても、2Hzで不安が減り7Hzで増える違いは残りました。この道は、前頭前野を通る経路とは別の、鼻→嗅球→嗅周皮質→扁桃体後部という経路です。</p>
+  <dl class="gloss">
+    <dt>前頭前野<span class="en">prefrontal cortex</span></dt>
+    <dd>額の奥にある脳の部分。考えて気持ちを整える、意図的な調整の中心です。</dd>
+  </dl>
+
+  <!-- ===== わかったこと4 ===== -->
+  <h2>4. 脳の中の目印</h2>
+  <p>嗅周皮質の<b>高ガンマ波</b>は、ゆっくりの刺激で強まり、速い刺激で弱まりました。不安状態のマウスでは弱まっていて、強いほど不安様行動が少ないという関係が見られました。</p>
+  <dl class="gloss">
+    <dt>高ガンマ波<span class="en">high-gamma, 65〜95Hz</span></dt>
+    <dd>1秒に65〜95回の速い脳の電気のゆれ。ここでは嗅周皮質に電極を入れて測った局所の波で、PV介在ニューロンの活動の目印です。脳全体の落ち着きを示す波ではありません。</dd>
+  </dl>
+
+  <!-- ===== わかったこと5 ===== -->
+  <h2>5. 2週間続けると</h2>
+  <p><b>不安モデル</b>のマウスの鼻に、2Hzの空気の流れを1日2時間、14日間送りました。</p>
+  <ul class="steps">
+    <li><span class="d">7日目</span><span>十字迷路で、不安様行動が減りはじめた</span></li>
+    <li><span class="d">14日目</span><span>十字迷路とオープンフィールドの両方で、不安状態にする前の水準に戻った。嗅周皮質の高ガンマ波も元に戻った</span></li>
+    <li><span class="d">21日目</span><span>刺激をやめて1週間たっても、改善は下がらず保たれていた</span></li>
+  </ul>
+  <dl class="gloss">
+    <dt>不安モデル</dt>
+    <dd>足への電気ショックによるストレスで、不安様行動を示す状態にしたマウスです。</dd>
+  </dl>
+  <p>なお、恐怖ですくむ反応（フリーズ）は、嗅球から嗅周皮質への経路を操作しても変わりませんでした。この経路は、恐怖のすくみ反応には関わらないことが確かめられています。</p>
+
+  <!-- ===== クラスとのつながり ===== -->
+  <h2>このクラスの練習とのつながり</h2>
+  <div class="bridge">
+    <p>考えがぐるぐるしているときやパニックのさなかほど、「落ち着こう」と思っても落ち着けないものです。この研究では、鼻を通るゆっくりのリズムが、考えて気持ちを整える<b>前頭前野を通らない道</b>で、不安に関わる場所に届いていました（マウスでの結果）。</p>
+    <p>研究では、1回に送る空気の量を一定にして、<b>回数を変えています</b>。呼吸ガイドの練習も、<b>鼻で・軽く・ゆっくり</b>です。</p>
+  </div>
+
+  <h2>この研究を読むときの注意</h2>
+  <ul class="limits">
+    <li>マウスの研究です。人ではまだ確かめられていません。</li>
+    <li>使われたのはオスのマウスで、メスでは確かめられていません。</li>
+    <li>刺激は外から送った空気や光で、マウスが自分でゆっくり呼吸したわけではありません。</li>
+    <li>人で1分に何回がよいかは示されていません。</li>
+    <li>研究の量は1日2時間で、毎日の練習とそのまま比べられるものではありません。</li>
+    <li>速い刺激で不安が強まったことから、「速い呼吸は不安を強めるのでは」と著者は考察しています。ただし不安モデルのマウスでは、速い刺激による悪化は統計的には確認されませんでした。人での検証はこれからです。</li>
+  </ul>
+
+  <a class="btn" href="./">呼吸ガイドで、ゆっくり吐く練習へ</a>
+
+  <div class="ref">
+    出典：Guo X, Liu M, Xiong Q, et al. A nose-to-brain circuit underlies anxiety regulation by nasal afferent frequency in mice. <i>Proc Natl Acad Sci U S A.</i> 2026;123(34):e2603853123.
+    <a href="https://doi.org/10.1073/pnas.2603853123" target="_blank" rel="noopener">https://doi.org/10.1073/pnas.2603853123</a><br>
+    図は論文の結果をもとに作成した模式図です。論文の図は転載していません。
+  </div>
+</main>
+
+<script>
+  try { var st = localStorage.getItem('ac_theme'); if (st) document.documentElement.setAttribute('data-theme', st); } catch (e) {}
+</script>
+</body>
+</html>
