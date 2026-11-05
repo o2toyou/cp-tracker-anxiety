@@ -76,7 +76,8 @@
   .freq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 14px; }
   .freq > div { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 6px; text-align: center; }
   .freq .hz { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); line-height: 1.2; }
-  .freq .nm { font-size: 11.5px; color: var(--muted); }
+  .freq .sec { font-size: 11.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; margin-top: 1px; }
+  .freq .nm { font-size: 11px; color: var(--muted); }
   .freq .ef { font-size: 13px; font-weight: 700; margin-top: 6px; }
   .freq .down .ef { color: var(--teal); }
   .freq .flat .ef { color: var(--muted); }
@@ -114,7 +115,7 @@
 </header>
 
 <main>
-  <h1 class="mincho">鼻を通る息のリズムが、<br>不安の中枢に届く道</h1>
+  <h1 class="mincho">鼻を出入りする空気のリズムが、<br>不安の中枢に届く道</h1>
   <div class="tags">
     <span class="mouse">マウスの研究</span>
     <span>PNAS 2026年8月</span>
@@ -122,7 +123,7 @@
   </div>
 
   <div class="lead">
-    <p>「鼻でゆっくり呼吸すると落ち着く」ことは、ヨガや瞑想の伝統でも、臨床研究でも知られてきました。けれど、その信号が<b>脳のどこを通って</b>不安を変えるのかは、わかっていませんでした。この研究は、その道筋の一つをマウスで見つけました。</p>
+    <p>「鼻でゆっくり呼吸すると落ち着く」ことは、ヨガや瞑想の伝統でも、臨床研究でも知られてきました。けれど、鼻を出入りする空気が感じ取られてから、<b>脳のどこを通って</b>不安を変えるのかは、わかっていませんでした。この研究は、その道筋の一つをマウスで見つけました。</p>
   </div>
 
   <!-- ===== やったこと ===== -->
@@ -135,10 +136,10 @@
     <dt>光遺伝学<span class="en">optogenetics</span></dt>
     <dd>光に反応するたんぱく質を特定の神経細胞に組み込み、光を当ててその細胞を狙って働かせる、動物実験の方法です。</dd>
   </dl>
-  <p>刺激の速さは、マウスのふだんの呼吸に近い<b>4Hz</b>を基準に、ゆっくりの<b>2Hz</b>、速い<b>7Hz</b>の3段階です。不安の度合いは<b>不安様行動</b>で測りました。</p>
+  <p>刺激の速さは、マウスのふだんの呼吸に近い<b>4Hz（0.25秒に1回）</b>を基準に、ゆっくりの<b>2Hz（0.5秒に1回）</b>、速い<b>7Hz（約0.14秒に1回）</b>の3段階です。不安の度合いは<b>不安様行動</b>で測りました。</p>
   <dl class="gloss">
     <dt>Hz（ヘルツ）</dt>
-    <dd>1秒あたりの回数。2Hzは1秒に2回です。</dd>
+    <dd>1秒あたりの回数。2Hzは1秒に2回で、0.5秒に1回のリズムです。マウスの呼吸は人よりずっと速く、静かにしているときで1秒に2〜5回ほど、においを嗅いで動き回るときは1秒に10回を超えることもあります。この研究が「ふつう」とした4Hzは、その中ほどの速さです。人の安静時は1分に10〜20回ほどで、1Hzに届きません。</dd>
     <dt>不安様行動<span class="en">anxiety-like behavior</span></dt>
     <dd>動物には気持ちを聞けないため、行動から不安の度合いを推し量ります。<b>高架式十字迷路</b>（高い所に置いた十字の通路。壁のない通路にいる時間が長いほど不安が低い）と<b>オープンフィールド</b>（広い箱。不安が強いと壁際にいて、真ん中にいる時間が短くなる）を使いました。</dd>
   </dl>
@@ -147,11 +148,11 @@
   <h2>1. 刺激のリズムで、不安が上下した</h2>
   <p class="note-s">光で嗅覚神経細胞を刺激した実験。正常なマウスの結果です。</p>
   <div class="freq">
-    <div class="down"><div class="hz">2Hz</div><div class="nm">ふつうの半分</div><div class="ef">不安が減る</div></div>
-    <div class="flat"><div class="hz">4Hz</div><div class="nm">ふつう</div><div class="ef">変わらない</div></div>
-    <div class="up"><div class="hz">7Hz</div><div class="nm">速い</div><div class="ef">不安が増える</div></div>
+    <div class="down"><div class="hz">2Hz</div><div class="sec">0.5秒に1回</div><div class="nm">ふつうの半分</div><div class="ef">不安が減る</div></div>
+    <div class="flat"><div class="hz">4Hz</div><div class="sec">0.25秒に1回</div><div class="nm">ふつう</div><div class="ef">変わらない</div></div>
+    <div class="up"><div class="hz">7Hz</div><div class="sec">0.14秒に1回</div><div class="nm">速い</div><div class="ef">不安が増える</div></div>
   </div>
-  <p>1Hzでも不安は減り、10Hzでは増えました。光の1回あたりの長さや、全体の刺激量をそろえても、頻度による違いは変わりませんでした。不安を左右していたのは<b>刺激の回数（リズム）</b>でした。</p>
+  <p>1Hz（1秒に1回）でも不安は減り、10Hz（0.1秒に1回）では増えました。光の1回あたりの長さや、全体の刺激量をそろえても、頻度による違いは変わりませんでした。不安を左右していたのは<b>刺激の回数（リズム）</b>でした。</p>
 
   <!-- ===== わかったこと2 ===== -->
   <h2>2. 信号の通り道</h2>
@@ -165,7 +166,7 @@
       <!-- 1 鼻 -->
       <rect x="40" y="8" width="240" height="62" rx="12" style="fill:var(--bg-2);stroke:var(--rule)"/>
       <text x="160" y="34" text-anchor="middle" style="fill:var(--ink);font-size:15px;font-weight:700">鼻の嗅覚神経細胞</text>
-      <text x="160" y="56" text-anchor="middle" style="fill:var(--muted);font-size:12px">息のリズムを受け取る</text>
+      <text x="160" y="56" text-anchor="middle" style="fill:var(--muted);font-size:12px">空気の流れのリズムを受け取る</text>
       <line x1="160" y1="70" x2="160" y2="100" style="stroke:var(--teal);stroke-width:2.5" marker-end="url(#ar)"/>
       <!-- 2 嗅球 -->
       <rect x="40" y="104" width="240" height="62" rx="12" style="fill:var(--bg-2);stroke:var(--rule)"/>
@@ -225,7 +226,7 @@
 
   <!-- ===== わかったこと5 ===== -->
   <h2>5. 2週間続けると</h2>
-  <p><b>不安モデル</b>のマウスの鼻に、2Hzの空気の流れを1日2時間、14日間送りました。</p>
+  <p><b>不安モデル</b>のマウスの鼻に、2Hz（0.5秒に1回）の空気の流れを1日2時間、14日間送りました。</p>
   <ul class="steps">
     <li><span class="d">7日目</span><span>十字迷路で、不安様行動が減りはじめた</span></li>
     <li><span class="d">14日目</span><span>十字迷路とオープンフィールドの両方で、不安状態にする前の水準に戻った。嗅周皮質の高ガンマ波も元に戻った</span></li>
@@ -240,7 +241,7 @@
   <!-- ===== クラスとのつながり ===== -->
   <h2>このクラスの練習とのつながり</h2>
   <div class="bridge">
-    <p>考えがぐるぐるしているときやパニックのさなかほど、「落ち着こう」と思っても落ち着けないものです。この研究では、鼻を通るゆっくりのリズムが、考えて気持ちを整える<b>前頭前野を通らない道</b>で、不安に関わる場所に届いていました（マウスでの結果）。</p>
+    <p>考えがぐるぐるしているときやパニックのさなかほど、「落ち着こう」と思っても落ち着けないものです。この研究では、鼻を出入りする空気のゆっくりしたリズムが、考えて気持ちを整える<b>前頭前野を通らない道</b>で、不安に関わる場所に届いていました（マウスでの結果）。</p>
     <p>研究では、1回に送る空気の量を一定にして、<b>回数を変えています</b>。呼吸ガイドの練習も、<b>鼻で・軽く・ゆっくり</b>です。</p>
   </div>
 
